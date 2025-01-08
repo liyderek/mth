@@ -24,6 +24,8 @@
 
     let open = $state(false);
 
+    let gave_up = $state(false);
+
     async function fetchRandom() {
         let response = await fetch(`http://localhost:5000/api/problems/AIME/random?min=${value[0]}&max=${value[1]}`);
         let problem = await response.json();
@@ -32,6 +34,7 @@
         cur_num = problem["num"];
         verdict = 0;
         answer = "";
+        gave_up = false;
 
         response = await fetch(`http://localhost:5000/api/problems/AIME/single?year=${cur_year}&contest=${cur_contest}&num=${cur_num}`);
         content = await response.text();
@@ -74,7 +77,7 @@
 
                     <div class="align-middle flex relative">
                         <div class="inline-block my-auto">
-                            <InputOTP.Root disabled={verdict === 1} maxlength={3} pattern={REGEXP_ONLY_DIGITS}
+                            <InputOTP.Root disabled={verdict === 1 || gave_up} maxlength={3} pattern={REGEXP_ONLY_DIGITS}
                                            bind:value={answer}
                                            onkeydown={(event) => {if (event.key === "Enter") getVerdict()}}>
                                 {#snippet children({cells})}
@@ -91,7 +94,7 @@
                                 {@html getHTML(verdict)}
                             </div>
                         {/if}
-                        {#if verdict === 1}
+                        {#if verdict === 1 || gave_up}
                             <div class="inline-block my-auto mx-2">
                                 <Button variant="ghost" class="text-green-300" onclick={fetchRandom}>Next</Button>
                             </div>
@@ -100,8 +103,8 @@
                         {#if verdict !== 1}
                             <AlertDialog.Root bind:open>
                                 <AlertDialog.Trigger
-                                        class={buttonVariants({ variant: "outline" }) + " absolute top-0 right-0"}>
-                                    skip
+                                        class={buttonVariants({ variant: "destructive" }) + " absolute top-0 right-0"}>
+                                    give up
                                 </AlertDialog.Trigger>
                                 <AlertDialog.Content>
                                     <AlertDialog.Header>
@@ -112,7 +115,7 @@
                                     </AlertDialog.Header>
                                     <AlertDialog.Footer>
                                         <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-                                        <AlertDialog.Action onclick={() => {fetchRandom(); open = false;}}>Continue
+                                        <AlertDialog.Action onclick={() => {gave_up = true; open = false;}}>Continue
                                         </AlertDialog.Action>
                                     </AlertDialog.Footer>
                                 </AlertDialog.Content>
@@ -121,7 +124,7 @@
                     </div>
                 </Card.Content>
             </Card.Root>
-            {#if verdict === 1}
+            {#if verdict === 1 || gave_up}
                 <Solutions year={cur_year} contest={cur_contest} num={cur_num}></Solutions>
             {/if}
         </div>
