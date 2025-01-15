@@ -4,6 +4,8 @@ from flask import Flask, request, jsonify, abort
 from flask_cors import CORS
 from bs4 import BeautifulSoup
 import requests
+from pymongo import MongoClient
+
 from server.aops_utils import *
 from server.aops_utils.get_answers import verify_answer
 from server.aops_utils.get_problems import get_problems, get_problem, random_problem
@@ -11,6 +13,11 @@ from server.aops_utils.get_solutions import get_solutions
 from server.data.data import read_file, write_file, successfully_solve, get_random_problem
 
 app = Flask(__name__)
+app.secret_key = "alksdfkjasdhflkjasdhfljadshfljsadhlfjahsdlfjhasdlf"
+client = MongoClient('localhost', 27017)
+db = client['math_database']
+users_collection = db['users']
+
 CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})
 
 
@@ -63,4 +70,4 @@ read_file()  # Function to read initial data when the application starts
 atexit.register(write_file)  # Ensure write_file() is called on application termination
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

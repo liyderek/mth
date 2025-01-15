@@ -1,11 +1,11 @@
 <script lang="ts">
-    import * as Resizable from "$lib/components/ui/resizable/index.ts";
-    import {Slider} from "$lib/components/ui/slider/index.js";
+    import * as Resizable from "$lib/components/ui/resizable";
+    import {Slider} from "$lib/components/ui/slider";
     import {Button} from "$lib/components/ui/button";
-    import {buttonVariants} from "$lib/components/ui/button/index.ts";
-    import * as Card from "$lib/components/ui/card/index.ts";
-    import * as InputOTP from "$lib/components/ui/input-otp/index.ts";
-    import * as AlertDialog from "$lib/components/ui/alert-dialog/index.ts";
+    import {buttonVariants} from "$lib/components/ui/button";
+    import * as Card from "$lib/components/ui/card";
+    import * as InputOTP from "$lib/components/ui/input-otp";
+    import * as AlertDialog from "$lib/components/ui/alert-dialog";
     import Solutions from "$lib/components/Solutions.svelte"
 
     import {onMount} from "svelte";
